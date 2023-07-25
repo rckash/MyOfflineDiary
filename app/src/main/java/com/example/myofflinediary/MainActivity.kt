@@ -77,28 +77,20 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, "Entry Saved", Toast.LENGTH_SHORT).show()
     }
 
-//    private fun viewEntries() {
-//        lateinit var entries: List<Entries>
-//        GlobalScope.launch(Dispatchers.IO) {
-//            entries = appDB.getEntries().getAllEntries()
-//
-//            withContext(Dispatchers.Main) {
-//                Toast.makeText(applicationContext, entries.toString(), Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
-
     private fun viewEntries(): MutableList<Entries> {
-        lateinit var entries: List<Entries>
-        GlobalScope.launch(Dispatchers.IO) {
-            entries = appDB.getEntries().getAllEntries()
+        lateinit var entries: MutableList<Entries>
+        val newEntries = mutableListOf<Entries>()
 
+        GlobalScope.launch(Dispatchers.IO) {
+            for (entry in appDB.getEntries().getAllEntries()) {
+                newEntries.add(entry)
+            }
             withContext(Dispatchers.Main) {
-                adapter.entries = entries
+                adapter.entries = newEntries
                 adapter.notifyDataSetChanged()
             }
         }
-        return entries.toMutableList()
+        return newEntries
     }
 
     private fun updateEntry(entries: Entries) {

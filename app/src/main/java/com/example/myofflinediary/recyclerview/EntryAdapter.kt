@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myofflinediary.databinding.EntryItemLayoutBinding
 import com.example.myofflinediary.roomdatabase.Entries
 
-class EntryAdapter (private val entries: List<Entries>): RecyclerView.Adapter<EntryItemViewHolder>() {
+class EntryAdapter (var entries: List<Entries>): RecyclerView.Adapter<EntryItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntryItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
