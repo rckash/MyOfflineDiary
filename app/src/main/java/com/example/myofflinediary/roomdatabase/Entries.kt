@@ -1,4 +1,4 @@
-package com.example.myofflinediary
+package com.example.myofflinediary.roomdatabase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

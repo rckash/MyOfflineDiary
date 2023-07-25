@@ -3,16 +3,23 @@ package com.example.myofflinediary
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myofflinediary.databinding.ActivityMainBinding
+import com.example.myofflinediary.recyclerview.EntryAdapter
+import com.example.myofflinediary.roomdatabase.Entries
+import com.example.myofflinediary.roomdatabase.EntriesDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var appDB: EntriesDatabase
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: EntryAdapter
+    private lateinit var entryList: MutableList<Entries>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +28,17 @@ class MainActivity : AppCompatActivity() {
 
         //database instantiation
         appDB = EntriesDatabase.invoke(this)
+
+        //recyclerview setup
+        recyclerView = binding.rvDiary
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        entryList = viewEntries()
+
+        //adapter setup
+        adapter = EntryAdapter(entryList)
+        recyclerView.adapter = adapter
+
 
         //create
         binding.btnSave.setOnClickListener {
@@ -59,15 +77,28 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, "Entry Saved", Toast.LENGTH_SHORT).show()
     }
 
-    private fun viewEntries() {
+//    private fun viewEntries() {
+//        lateinit var entries: List<Entries>
+//        GlobalScope.launch(Dispatchers.IO) {
+//            entries = appDB.getEntries().getAllEntries()
+//
+//            withContext(Dispatchers.Main) {
+//                Toast.makeText(applicationContext, entries.toString(), Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
+
+    private fun viewEntries(): MutableList<Entries> {
         lateinit var entries: List<Entries>
         GlobalScope.launch(Dispatchers.IO) {
             entries = appDB.getEntries().getAllEntries()
 
             withContext(Dispatchers.Main) {
-                Toast.makeText(applicationContext, entries.toString(), Toast.LENGTH_SHORT).show()
+                adapter.entries = entries
+                adapter.notifyDataSetChanged()
             }
         }
+        return entries.toMutableList()
     }
 
     private fun updateEntry(entries: Entries) {

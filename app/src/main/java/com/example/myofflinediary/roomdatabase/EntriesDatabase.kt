@@ -1,4 +1,4 @@
-package com.example.myofflinediary
+package com.example.myofflinediary.roomdatabase
 
 import android.content.Context
 import androidx.room.Database
@@ -7,7 +7,8 @@ import androidx.room.RoomDatabase
 
 @Database (
     entities = [Entries::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class EntriesDatabase: RoomDatabase() {
     abstract fun getEntries(): EntriesDao

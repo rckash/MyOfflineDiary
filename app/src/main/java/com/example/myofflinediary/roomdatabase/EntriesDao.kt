@@ -1,4 +1,4 @@
-package com.example.myofflinediary
+package com.example.myofflinediary.roomdatabase
 
 import androidx.room.Dao
 import androidx.room.Delete
